@@ -17,19 +17,19 @@ getent passwd $USER >/dev/null
 if [ $? -eq 0 ]; then
     printf "Error, user already exists.\n"
     exit 1
+else
+    # User creation
+    adduser --quiet --disabled-password --shell /bin/bash --home /home/$USER --gecos "User" $USER
+    echo "$USER:$PASSW" | chpasswd
+    usermod -g sftpusers $USER
+
+    # User access
+    chown root:$USER /home/$USER
+    chmod 755 /home/$USER
+
+    # Create dir
+    create_folder_user "/home/$USER/data" $USER
+
+    printf "SFTP user $USER created successfully\n."
+    exit 0
 fi
-
-# User creation
-adduser --quiet --disabled-password --shell /bin/bash --home /home/$USER --gecos "User" $USER
-echo "$USER:$PASSW" | chpasswd
-usermod -g sftpusers $USER
-
-# User access
-chown root:$USER /home/$USER
-chmod 755 /home/$USER
-
-# Create dir
-create_folder_user "/home/$USER/data" $USER
-
-printf "SFTP user $USER created successfully\n."
-exit 0
