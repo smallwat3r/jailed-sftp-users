@@ -1,10 +1,10 @@
 # sftp-jailed-users  
 
-This repo contains scripts that allow to configure a Debian / Ubuntu 
-server to create and delete jailed SFTP users with username / password authentification.  
+This repo contains necessary scripts to configure a Debian / Ubuntu 
+server to create and delete jailed SFTP users / accounts with username / password authentification.  
 
-All users created will have access to their own SFTP directory. These scripts doesn't allow 
-to create multiple users for one same directory.  
+Jailed users created will have access to their own and unique SFTP directory. These scripts doesn't allow 
+to create multiple users for one same SFTP account.  
 
 ## Instructions  
 
@@ -22,7 +22,7 @@ SSH connections from the jailed users (from a `sftpusers` group) using password 
 
 ### Create a user  
 
-Create a unique jailed directory `<username>/data` for the user on the server, and 
+Create a unique jailed directory `/home/<username>/data` for the user on the server, and 
 accessible via SSH with password Auth (or using GUI software like FileZilla).  
 ```sh 
 ./create_user.sh <username> <password>
@@ -32,5 +32,5 @@ accessible via SSH with password Auth (or using GUI software like FileZilla).
 
 Remove the user from the server (including his data).  
 ```sh
-./delete_user.sh <username> <password>
+./delete_user.sh <username>
 ```

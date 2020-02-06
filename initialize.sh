@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Matthieu Petiteau <mpetiteau.pro@gmail.com>
 # Initialize server to allow SSH access to jailed users from specific group.
 set -e
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Matthieu Petiteau <mpetiteau.pro@gmail.com>
 # Delete a user from sftp access
 set -e
 USER=$1

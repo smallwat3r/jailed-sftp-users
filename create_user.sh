@@ -1,4 +1,5 @@
 #!/bin/bash
+# Author: Matthieu Petiteau <mpetiteau.pro@gmail.com>
 # Creates a new user to access a jailed SFTP.
 
 create_folder_user() {
