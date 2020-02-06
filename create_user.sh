@@ -14,7 +14,7 @@ PASSW=$2
 
 # Check if user exists already
 getent passwd $USER >/dev/null
-if [ getent passwd $USER ] >/dev/null; then
+if [ $? -eq 0 ]; then
     printf "Error, user already exists.\n"
     exit 1
 fi
