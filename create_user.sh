@@ -1,35 +1,32 @@
-#!/bin/bash
-# Author: Matthieu Petiteau <mpetiteau.pro@gmail.com>
-# Creates a new user to access a jailed SFTP.
+#!/usr/bin/env bash
+# Creates a new SFTP user.
+set -e
+_user = $1
+_passw = $2
 
-create_folder_user() {
-    mkdir $1
-    chown $2:$2 $1
-    chmod 755 $1
+_create_user_dir() {
+  mkdir $1
+  chown $2:$2 $1
+  chmod 755 $1
 }
 
-set -e
-USER=$1
-PASSW=$2
-
-# Check if user exists already
-getent passwd $USER >/dev/null
-if [ $? -eq 0 ]; then
-    printf "Error, user already exists.\n"
+_check_exists() {
+  id -u $1 &>/dev/null || {
+    printf "Error, user $1 already exists\n" >&2
     exit 1
-else
-    # User creation
-    adduser --quiet --disabled-password --shell /bin/bash --home /home/$USER --gecos "User" $USER
-    echo "$USER:$PASSW" | chpasswd
-    usermod -g sftpusers $USER
+  }
+}
 
-    # User access
-    chown root:$USER /home/$USER
-    chmod 755 /home/$USER
+_add_user() {
+  adduser --quiet --disabled-password --shell /bin/bash --home /home/$USER --gecos "User" $1
+  echo "$1:$2" | chpasswd
+  usermod -g sftpusers $1
+  chown root:$1 /home/$1
+  chmod 755 /home/$1
+}
 
-    # Create dir
-    create_folder_user "/home/$USER/data" $USER
-
-    printf "SFTP user $USER created successfully\n."
-    exit 0
-fi
+_check_exists $_user
+_add_user $_user $_passw
+_create_user_dir "/home/$_user/dara" $_user
+printf "User $_user created.\n"
+exit 0

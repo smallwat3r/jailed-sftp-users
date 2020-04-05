@@ -1,20 +1,22 @@
-#!/bin/bash
-# Author: Matthieu Petiteau <mpetiteau.pro@gmail.com>
+# #!/usr/bin/env bash
 # Delete a user from sftp access
 set -e
-USER=$1
+_user = $1
 
-# Check if user exists
-getent passwd $USER > /dev/null
-if [ $? -eq 0 ]; then
-    # Delete user (including data)
-    rm -rf "/home/$USER"
-    userdel $USER
-    groupdel $USER
-
-    printf "The user $USER has been removed.\n"
-    exit 0
-else
-    printf "Error, the user doesn't exists\n"
+_check_exists() {
+  id -u $1 &>/dev/null || {
+    printf "Error, user $1 doesn't exists\n" >&2
     exit 1
-fi
+  }
+}
+
+_delete_user() {
+  rm -rf "/home/$1"
+  userdel $1
+  groupdel $1
+}
+
+_check_exists $_user
+_delete_user $_user
+printf "User $_user has been removed.\n"
+exit 0
