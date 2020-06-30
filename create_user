@@ -14,7 +14,7 @@ userdata="${userhome}/data"
 
 [[ -z ${passw} ]] && {
 	printf 'Missing user password\n'
-	exit 1 
+	exit 1
 }
 
 id -u ${user} &>/dev/null && {
@@ -22,8 +22,16 @@ id -u ${user} &>/dev/null && {
 	exit 1
 }
 
-adduser --quiet --disabled-password --shell /bin/bash --home ${userhome} --gecos "User" ${user}
+adduser \
+  --quiet \
+  --disabled-password \
+  --shell /bin/bash \
+  --home ${userhome} \
+  --gecos "User" \
+  ${user}
+
 echo "${user}:${passw}" | chpasswd
+
 usermod -g sftpusers ${user}
 chown root:${user} ${userhome}
 chmod 755 ${userhome}

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Initialize server to allow SSH access to jailed users from specific group.
+# Initialize server to allow SFTP access to jailed users
 set -e
 
 # Creates sftpuser group if not already created
@@ -7,17 +7,20 @@ getent group sftpusers || groupadd sftpusers
 
 # In case this script has already run before, remove and re-run.
 # This adds a `## START_SFTP_CONFIG ##` and a `## END_SFTP_CONFIG ##`
-# where the modifications has been applied.
-sed "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" /etc/ssh/sshd_config >sshd_config.temp
+# where the modifications has been applied
+sed "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" \
+  /etc/ssh/sshd_config >sshd_config.temp
+
 cat sshd_config.temp >/etc/ssh/sshd_config
 rm sshd_config.temp
 
-# Comment out setting to disable SFTP.
-sed -i '/^Subsystem.*sftp \/usr\/lib\/openssh\/sftp-server/s/^/#/g' /etc/ssh/sshd_config
+# Comment out setting to disable SFTP
+sed -i \
+  '/^Subsystem.*sftp \/usr\/lib\/openssh\/sftp-server/s/^/#/g' \
+  /etc/ssh/sshd_config
 
-# Append new SFTP settings at end of file.
-printf "
-## START_SFTP_CONFIG ##
+# Append new SFTP settings at end of file
+printf "## START_SFTP_CONFIG ##
 
 Subsystem sftp internal-sftp
 
@@ -33,5 +36,4 @@ Match group sftpusers
 ## END_SFTP_CONFIG ##" >>/etc/ssh/sshd_config
 
 systemctl restart sshd
-
 printf "SFTP configuration is set-up.\n"
