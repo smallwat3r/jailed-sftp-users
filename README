@@ -1,17 +1,19 @@
+(Tested on Ubuntu 18.04 server)
+
 This repo contains scripts to manage jailed SFTP users with
 username and password authentification (SSH).
 
-You will need to run the `initialize` script that will make 
-sure the server is configured correctly to create and allow 
+You will need to run the `initialize` script that will make
+sure the server is configured correctly to create and allow
 the jailed users to connect from a `sftpusers` group.
 
-./initialize 
+./initialize
 
 Use `create_user` to create new jailed users on the server.
 
 ./create_user <username> <password>
 
-This will give them access to their own jailed directory 
+This will give them access to their own jailed directory
 at /home/<username>/data
 
 Use `delete_user` to delete users from the server.
