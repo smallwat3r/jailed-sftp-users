@@ -4,7 +4,8 @@ set -e
 
 user=$1
 passw=$2
-userdir="/home/${user}/data"
+userhome="/home/${user}"
+userdata="${userhome}/data"
 
 [[ -z ${user} ]] && {
 	printf 'Missing user to create\n'
@@ -21,14 +22,15 @@ id -u ${user} &>/dev/null && {
 	exit 1
 }
 
-adduser --quiet --disabled-password --shell /bin/bash --home /home/${user} --gecos "User" ${user}
+adduser --quiet --disabled-password --shell /bin/bash --home ${userhome} --gecos "User" ${user}
 echo "${user}:${passw}" | chpasswd
 usermod -g sftpusers ${user}
-chown root:${user} /home/${user}
-chmod 755 /home/${user}
+chown root:${user} ${userhome}
+chmod 755 ${userhome}
 
-mkdir ${userdir}
-chown ${user}:${user} ${userdir}
-chmod 755 ${userdir}
+# Give user access to their jailed directory
+mkdir ${userdata}
+chown ${user}:${user} ${userdata}
+chmod 755 ${userdata}
 
 printf "User ${user} created.\n"
