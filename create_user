@@ -6,6 +6,16 @@ user=$1
 passw=$2
 userdir="/home/${user}/data"
 
+[[ -z ${user} ]] && {
+	printf 'Missing user to create\n'
+	exit 1
+}
+
+[[ -z ${passw} ]] && {
+	printf 'Missing user password\n'
+	exit 1 
+}
+
 id -u ${user} &>/dev/null && {
 	printf "Error, user ${user} already exists\n" >&2
 	exit 1

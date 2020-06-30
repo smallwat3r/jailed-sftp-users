@@ -4,6 +4,11 @@ set -e
 
 user=$1
 
+[[ -z ${user} ]] && {
+	printf 'Missing user to delete\n'
+	exit 1
+}
+
 id -u ${user} &>/dev/null || {
 	printf "Error, user ${user} doesn't exists\n" >&2
 	exit 1
