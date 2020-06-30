@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
+#
 # Initialize server to allow SFTP access to jailed users
 set -e
+
+sshd_config='/etc/ssh/sshd_config'
+sshd_temp='sshd_config.temp'
 
 # Creates sftpuser group if not already created
 getent group sftpusers || groupadd sftpusers
@@ -9,31 +13,34 @@ getent group sftpusers || groupadd sftpusers
 # This adds a `## START_SFTP_CONFIG ##` and a `## END_SFTP_CONFIG ##`
 # where the modifications has been applied
 sed "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" \
-  /etc/ssh/sshd_config >sshd_config.temp
+  ${sshd_config} >${sshd_temp}
 
-cat sshd_config.temp >/etc/ssh/sshd_config
-rm sshd_config.temp
+cat ${sshd_temp} >${sshd_config}
+rm ${sshd_temp}
 
 # Comment out setting to disable SFTP
 sed -i \
   '/^Subsystem.*sftp \/usr\/lib\/openssh\/sftp-server/s/^/#/g' \
-  /etc/ssh/sshd_config
+  ${sshd_config}
 
-# Append new SFTP settings at end of file
-printf "## START_SFTP_CONFIG ##
+# Append SFTP settings to sshd_config
+tab=$'\t'
+cat <<EOF >>${sshd_config}
+## START_SFTP_CONFIG ##
 
 Subsystem sftp internal-sftp
 
 Match group sftpusers
-\tChrootDirectory %%h
-\tX11Forwarding no
-\tPermitTunnel no
-\tAllowAgentForwarding no
-\tAllowTcpForwarding no
-\tForceCommand internal-sftp
-\tPasswordAuthentication yes
+${tab}ChrootDirectory %%h
+${tab}X11Forwarding no
+${tab}PermitTunnel no
+${tab}AllowAgentForwarding no
+${tab}AllowTcpForwarding no
+${tab}ForceCommand internal-sftp
+${tab}PasswordAuthentication yes
 
-## END_SFTP_CONFIG ##" >>/etc/ssh/sshd_config
+## END_SFTP_CONFIG ##
+EOF
 
 systemctl restart sshd
 printf "SFTP configuration is set-up.\n"
