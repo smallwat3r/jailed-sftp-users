@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # Delete a user from sftp access
 set -e
 

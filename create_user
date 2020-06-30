@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+#
 # Creates a new SFTP user.
 set -e
 
