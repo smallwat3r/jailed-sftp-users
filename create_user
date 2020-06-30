@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Creates a new SFTP user.
 set -e
-_user = $1
-_passw = $2
+_user=$1
+_passw=$2
 
 _create_user_dir() {
   mkdir $1
@@ -29,4 +29,3 @@ _check_exists $_user
 _add_user $_user $_passw
 _create_user_dir "/home/$_user/dara" $_user
 printf "User $_user created.\n"
-exit 0

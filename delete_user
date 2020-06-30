@@ -1,7 +1,7 @@
 # #!/usr/bin/env bash
 # Delete a user from sftp access
 set -e
-_user = $1
+_user=$1
 
 _check_exists() {
   id -u $1 &>/dev/null || {
@@ -19,4 +19,3 @@ _delete_user() {
 _check_exists $_user
 _delete_user $_user
 printf "User $_user has been removed.\n"
-exit 0

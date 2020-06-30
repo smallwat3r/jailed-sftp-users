@@ -8,12 +8,7 @@ to create multiple users for one same SFTP account.
 
 ## Instructions  
 
-Make sure all scripts are executables.  
-```sh
-chmod +x initialize.sh create_user.sh delete_user.sh
-```
-
-You will need to run `initialize.sh` so you're server is configured to accept 
+You will need to run `./initialize` so you're server is configured to accept 
 SSH connections from the jailed users (from a `sftpusers` group) using password Auth.  
 
 ```sh
@@ -25,12 +20,12 @@ SSH connections from the jailed users (from a `sftpusers` group) using password 
 Create a unique jailed directory `/home/<username>/data` for the user on the server, and 
 accessible via SSH with password Auth (or using GUI software like FileZilla).  
 ```sh 
-./create_user.sh <username> <password>
+./create_user <username> <password>
 ```
 
 ### Delete a user  
 
 Remove the user from the server (including his data).  
 ```sh
-./delete_user.sh <username>
+./delete_user <username>
 ```

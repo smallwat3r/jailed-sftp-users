@@ -39,4 +39,3 @@ _user_group sftpusers
 _prep_config
 systemctl restart sshd
 printf "SFTP configuration is set-up.\n"
-exit 0
