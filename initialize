@@ -1,4 +1,4 @@
-!/usr/bin/env bash
+#!/usr/bin/env bash
 # Initialize server to allow SSH access to jailed users from specific group.
 set -e
 
