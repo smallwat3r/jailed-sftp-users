@@ -12,16 +12,16 @@ sed "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" /etc/ssh/sshd_config >s
 cat sshd_config.temp >/etc/ssh/sshd_config
 rm sshd_config.temp
 
-# Comment out setting to disable SFTP (case if tabs and case if spaces).
-sed -i "s/^Subsystem\tsftp\t\/usr\/lib\/openssh\/sftp-server/#Subsystem \
-sftp \/usr\/lib\/openssh\/sftp-server/" /etc/ssh/sshd_config
-sed -i "s/^Subsystem sftp \/usr\/lib\/openssh\/sftp-server/#Subsystem \
-sftp \/usr\/lib\/openssh\/sftp-server/" /etc/ssh/sshd_config
+# Comment out setting to disable SFTP.
+sed -i '/^Subsystem.*sftp \/usr\/lib\/openssh\/sftp-server/s/^/#/g' /etc/ssh/sshd_config
 
 # Append new SFTP settings at end of file.
-printf "## START_SFTP_CONFIG ##
+printf "
+## START_SFTP_CONFIG ##
+
 Subsystem sftp internal-sftp
-\nMatch group sftpusers
+
+Match group sftpusers
 \tChrootDirectory %%h
 \tX11Forwarding no
 \tPermitTunnel no
@@ -29,6 +29,7 @@ Subsystem sftp internal-sftp
 \tAllowTcpForwarding no
 \tForceCommand internal-sftp
 \tPasswordAuthentication yes
+
 ## END_SFTP_CONFIG ##" >>/etc/ssh/sshd_config
 
 systemctl restart sshd
