@@ -3,23 +3,23 @@
 # Creates a new SFTP user.
 set -e
 
-user=$1
-passw=$2
-userhome="/home/${user}"
-userdata="${userhome}/data"
+USER=$1
+PASSW=$2
+USERHOME="/home/${USER}"
+USERDATA="${USERHOME}/data"
 
-[[ -z ${user} ]] && {
-  printf 'Missing user to create\n'
+[[ -z ${USER} ]] && {
+  printf 'Missing username\n'
   exit 1
 }
 
-[[ -z ${passw} ]] && {
+[[ -z ${PASSW} ]] && {
   printf 'Missing user password\n'
   exit 1
 }
 
-id -u ${user} &>/dev/null && {
-  printf "Error, user ${user} already exists\n" >&2
+id -u "${USER}" &>/dev/null && {
+  printf "Error, user %s already exists\n" "${USER}" >&2
   exit 1
 }
 
@@ -27,19 +27,19 @@ adduser \
   --quiet \
   --disabled-password \
   --shell /bin/bash \
-  --home ${userhome} \
+  --home "${USERHOME}" \
   --gecos "User" \
-  ${user}
+  "${USER}"
 
-echo "${user}:${passw}" | chpasswd
+echo "${USER}:${PASSW}" | chpasswd
 
-usermod -g sftpusers ${user}
-chown root:${user} ${userhome}
-chmod 755 ${userhome}
+usermod -g sftpusers "${USER}"
+chown "root:${USER}" "${USERHOME}"
+chmod 755 "${USERHOME}"
 
 # Give user access to their jailed directory
-mkdir ${userdata}
-chown ${user}:${user} ${userdata}
-chmod 755 ${userdata}
+mkdir "${USERDATA}"
+chown "${USER}:${USER}" "${USERDATA}"
+chmod 755 "${USERDATA}"
 
-printf "User ${user} created.\n"
+printf "User %s created.\n" "${USER}"

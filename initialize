@@ -3,35 +3,37 @@
 # Initialize server to allow SFTP access to jailed users
 set -e
 
-sshd_config='/etc/ssh/sshd_config'
-sshd_temp='sshd_config.temp'
+SSHD_CONFIG='/etc/ssh/sshd_config'
+SSHD_TEMP='sshd_config.temp'
 
-# Creates sftpuser group if not already created
+# Create sftpuser group if not already created.
 getent group sftpusers || groupadd sftpusers
 
-# In case this script has already run before, remove and re-run.
-# This adds a `## START_SFTP_CONFIG ##` and a `## END_SFTP_CONFIG ##`
-# where the modifications has been applied
-sed "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" \
-  ${sshd_config} >${sshd_temp}
+# In case this script has already run before, remove the previous modifications
+# so we can run this again safely. This script adds a `## START_SFTP_CONFIG ##`
+# and a `## END_SFTP_CONFIG ##` where the modifications have previously been
+# applied, so we delete this part as it will get created again.
+sed \
+  "/## START_SFTP_CONFIG ##/,/## END_SFTP_CONFIG ##/d" \
+  ${SSHD_CONFIG} >${SSHD_TEMP}
 
-cat ${sshd_temp} >${sshd_config}
-rm ${sshd_temp}
+cat ${SSHD_TEMP} >${SSHD_CONFIG}
+rm ${SSHD_TEMP}
 
-# Comment out setting to disable SFTP
+# Make sure default setting to disable SFTP is commented.
 sed -i \
   '/^Subsystem.*sftp \/usr\/lib\/openssh\/sftp-server/s/^/#/g' \
-  ${sshd_config}
+  ${SSHD_CONFIG}
 
-# Append SFTP settings to sshd_config
+# Append SFTP settings to the configuration file.
 tab=$'\t'
-cat <<EOF >>${sshd_config}
+cat <<EOF >>${SSHD_CONFIG}
 ## START_SFTP_CONFIG ##
 
 Subsystem sftp internal-sftp
 
 Match group sftpusers
-${tab}ChrootDirectory %%h
+${tab}ChrootDirectory %h
 ${tab}X11Forwarding no
 ${tab}PermitTunnel no
 ${tab}AllowAgentForwarding no

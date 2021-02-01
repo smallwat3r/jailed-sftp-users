@@ -1,7 +1,18 @@
 (Tested on Ubuntu 18.04 server)
 
 This repo contains scripts to manage jailed SFTP users with
-username and password authentification (SSH).
+username and password authentification (via SSH).
+
+DISCLAIMER:
+
+Please make sure you've tested these script before using these, 
+and that the configuration setup suits your needs (in terms of 
+usage and security).
+
+I also recommended using these scripts on a dedicated server 
+(such as an AWS EC2 instance).
+
+USAGE: 
 
 You will need to run the `initialize` script that will make
 sure the server is configured correctly to create and allow

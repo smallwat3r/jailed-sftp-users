@@ -3,20 +3,20 @@
 # Delete a user from sftp access
 set -e
 
-user=$1
+USER=$1
 
-[[ -z ${user} ]] && {
+[[ -z ${USER} ]] && {
   printf 'Missing user to delete\n'
   exit 1
 }
 
-id -u ${user} &>/dev/null || {
-  printf "Error, user ${user} doesn't exists\n" >&2
+id -u "${USER}" &>/dev/null || {
+  printf "Error, user %s doesn't exists\n" "${USER}" >&2
   exit 1
 }
 
-rm -rf "/home/${user}"
-groupdel ${user}
-userdel ${user}
+rm -rf "/home/${USER:?}"
+groupdel "${USER}"
+userdel "${USER}"
 
-printf "User ${user} has been removed.\n"
+printf "User %s has been removed.\n" "${USER}"
