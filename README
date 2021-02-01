@@ -5,7 +5,7 @@ username and password authentification (via SSH).
 
 DISCLAIMER:
 
-Please make sure you've tested these script before using these, 
+Please make sure you've tested these scripts before using them, 
 and that the configuration setup suits your needs (in terms of 
 usage and security).
 
